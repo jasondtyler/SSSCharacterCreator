@@ -1,4 +1,5 @@
 import flet as ft
+from flet.core.border_radius import horizontal
 from flet.core.types import TextAlign
 
 
@@ -22,6 +23,7 @@ def main(page: ft.Page):
     # This is probably the worst coding i've done in awhile, but it does what it needs to and looks presentable.
     page.title = "Star's Star's Stars Character Creator"
     page.scroll = "adaptive"
+    page.horizontal_alignment = ft.CrossAxisAlignment.STRETCH
 
     def navigate_to(route):
         page.go(route)
@@ -166,24 +168,36 @@ def main(page: ft.Page):
     sectionOne = ft.Column(
         controls=[
             ft.Row(
-                spacing=775,
                 # Trying to have it be that the Base Class is ALWAYS at the far right of the window. I could accomplish
                 # something similiar by having a lot of blank texts with large widths, but I dont want to do that for
                 # clutter. It's already bad enough
+
                 controls=[
                     ft.TextField(width=200, label="Character Name"),
-                    ft.TextField(width=200, label="Base Class 1"),
+                    ft.Row(
+                        expand=1,
+                        alignment=ft.MainAxisAlignment.END,
+                        controls=[
+                            ft.TextField(width=200, label="Base Class 1"),
+
+                        ],
+                    ),
                 ],
             ),
             ft.Row(
-                spacing=775,
                 controls=[
                     ft.TextField(width=200, label="Job"),
-                    ft.TextField(width=200, label="Base Class 2"),
+                    ft.Row(
+                        expand=1,
+                        alignment=ft.MainAxisAlignment.END,
+                        controls=[
+                            ft.TextField(width=200, label="Base Class 2"),
+                        ],
+                    ),
+
                     # Replace this later with a thing that fetches the class from another page
                 ],
             ),
-
         ],
     )
     sectionTwo = ft.Column(
@@ -557,5 +571,7 @@ def main(page: ft.Page):
     )
     page.on_route_change = route_change
     page.on_view_pop = view_pop
-    page.go("/main") # THIS IS NECESSARY! DONT TOUCH
+    page.go("/main")  # THIS IS NECESSARY! DONT TOUCH
+
+
 ft.app(main)
