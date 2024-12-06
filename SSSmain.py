@@ -1,33 +1,23 @@
 import flet as ft
-from flet.core.border_radius import horizontal
 from flet.core.types import TextAlign
-
-
 def checkInt(e):  # Self explanatory, checks to make sure that the text field IS an int.
     if e.control.value.isdigit():
         e.control.error_text = None
     else:
         e.control.value = 10
     e.control.update()
-
-
 vertical_border = ft.Container(
     width=1,  # Border width
     height=50,  # Adjust height to fit content
     bgcolor="white",  # Border color
 )
-
-
 def main(page: ft.Page):
     # Anything Major section that needs to start with a ft.Row is its own area. Columns are usually kept together
     # This is probably the worst coding i've done in awhile, but it does what it needs to and looks presentable.
     page.title = "Star's Star's Stars Character Creator"
     page.scroll = "adaptive"
-    page.horizontal_alignment = ft.CrossAxisAlignment.STRETCH
-
     def navigate_to(route):
         page.go(route)
-
     def mainView():
         return ft.View(
             route="/main",
@@ -41,22 +31,6 @@ def main(page: ft.Page):
                         sectionTwo,
                         ft.Divider(),
                         sectionThree,
-                    ],
-                ),
-            ],
-        )
-
-    def inventoryView():
-        return ft.View(
-            route="/inventory",
-            controls=[
-                ft.Column(
-                    controls=[
-                        sectionOne,
-                        ft.Divider(),
-                        navigationBar,
-                        ft.Divider(),
-                        ft.Text("INVENTORY PAGE: TO BE COMPLETED", weight=ft.FontWeight.BOLD, size=30)
                     ],
                 ),
             ],
@@ -77,7 +51,6 @@ def main(page: ft.Page):
                 ),
             ],
         )
-
     def classSelectionView():
         return ft.View(
             route="/class-selection",
@@ -93,7 +66,6 @@ def main(page: ft.Page):
                 ),
             ],
         )
-
     def featuresTalentsView():
         return ft.View(
             route="/features-talents",
@@ -109,7 +81,6 @@ def main(page: ft.Page):
                 ),
             ],
         )
-
     def characterCreatorView():
         return ft.View(
             route="/character-creator",
@@ -125,7 +96,6 @@ def main(page: ft.Page):
                 ),
             ],
         )
-
     def route_change(route):
         route = route.data.strip()
         page.views.clear()
@@ -133,8 +103,6 @@ def main(page: ft.Page):
             page.views.append(mainView())
         elif route == "/actions":
             page.views.append(actionsView())
-        elif route == "/inventory":
-            page.views.append(inventoryView())
         elif route == "/class-selection":
             page.views.append(classSelectionView())
         elif route == "/features-talents":
@@ -144,7 +112,6 @@ def main(page: ft.Page):
         else:
             page.views.append(mainView())
         page.update()
-
     def navigation_bar_change(event):
         selected_index = event.control.selected_index
         if selected_index == 0:
@@ -152,26 +119,21 @@ def main(page: ft.Page):
         elif selected_index == 1:
             navigate_to("/main")
         elif selected_index == 2:
-            navigate_to("/inventory")
-        elif selected_index == 3:
             navigate_to("/class-selection")
-        elif selected_index == 4:
+        elif selected_index == 3:
             navigate_to("/features-talents")
-        elif selected_index == 5:
+        elif selected_index == 4:
             navigate_to("/character-creator")
-
     def view_pop(view):
         page.views.pop()
         if len(page.views) == 0:
             page.window_close()
-
     sectionOne = ft.Column(
         controls=[
             ft.Row(
                 # Trying to have it be that the Base Class is ALWAYS at the far right of the window. I could accomplish
                 # something similiar by having a lot of blank texts with large widths, but I dont want to do that for
                 # clutter. It's already bad enough
-
                 controls=[
                     ft.TextField(width=200, label="Character Name"),
                     ft.Row(
@@ -179,7 +141,6 @@ def main(page: ft.Page):
                         alignment=ft.MainAxisAlignment.END,
                         controls=[
                             ft.TextField(width=200, label="Base Class 1"),
-
                         ],
                     ),
                 ],
@@ -191,10 +152,9 @@ def main(page: ft.Page):
                         expand=1,
                         alignment=ft.MainAxisAlignment.END,
                         controls=[
-                            ft.TextField(width=200, label="Base Class 2"),
+                            ft.TextField(width=200, label="Base Class 1"),
                         ],
                     ),
-
                     # Replace this later with a thing that fetches the class from another page
                 ],
             ),
@@ -209,10 +169,8 @@ def main(page: ft.Page):
                         border=ft.border.all(1, "White"),
                         content=ft.Column(
                             horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-
                             controls=[
                                 ft.Text("HP", size=18),
-
                                 ft.Row(
                                     controls=[
                                         ft.TextField(width=80, label="Current", text_size=20,
@@ -223,9 +181,7 @@ def main(page: ft.Page):
                                     ],
                                 ),
                             ],
-
                         ),
-
                     ),
                     ft.Container(
                         padding=10,
@@ -234,7 +190,6 @@ def main(page: ft.Page):
                             horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                             controls=[
                                 ft.Text("ML", size=18),
-
                                 ft.Row(
                                     controls=[
                                         ft.TextField(width=80, label="Current", text_size=20,
@@ -254,7 +209,6 @@ def main(page: ft.Page):
                             horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                             controls=[
                                 ft.Text("SL", size=18),
-
                                 ft.Row(
                                     controls=[
                                         ft.TextField(width=80, label="Current", text_size=20,
@@ -330,13 +284,11 @@ def main(page: ft.Page):
                         ],
                     ),
                 ]
-
             ),
         ],
     )
     sectionThree = ft.Column(
         controls=[
-
             ft.Row(
                 controls=[
                     ft.Container(
@@ -359,7 +311,6 @@ def main(page: ft.Page):
                                 ),
                                 ft.Row(
                                     controls=[
-
                                         ft.TextField(label="Con", on_change=checkInt, width=60),
                                         ft.TextField(label="Mod", disabled=True, width=60),
                                     ],
@@ -371,7 +322,6 @@ def main(page: ft.Page):
                                     ],
                                 ),
                                 ft.Row(
-
                                     controls=[
                                         ft.TextField(label="Wis", on_change=checkInt, width=60),
                                         ft.TextField(label="Mod", disabled=True, width=60),
@@ -517,12 +467,9 @@ def main(page: ft.Page):
                                     ],
                                 ),
                             ],
-
                         ),
-
                     ),
                     # Note to self: Add to pdf to have it be denoted that anything in bold is expertise, or smtn similiar
-
                     ft.Container(
                         padding=10,
                         border=ft.border.all(1, "White"),
@@ -553,7 +500,6 @@ def main(page: ft.Page):
                     ),
                 ],
             ),
-
         ],
     )
     navigationBar = ft.NavigationBar(
@@ -562,16 +508,12 @@ def main(page: ft.Page):
         destinations=[
             ft.NavigationBarDestination(label="Actions"),
             ft.NavigationBarDestination(label="Main"),
-            ft.NavigationBarDestination(label="Inventory"),
             ft.NavigationBarDestination(label="Class Selection"),
             ft.NavigationBarDestination(label="Features and Talents"),
             ft.NavigationBarDestination(label="Character Creator"),
         ]
-
     )
     page.on_route_change = route_change
     page.on_view_pop = view_pop
-    page.go("/main")  # THIS IS NECESSARY! DONT TOUCH
-
-
+    page.go("/main") # THIS IS NECESSARY! DONT TOUCH
 ft.app(main)
