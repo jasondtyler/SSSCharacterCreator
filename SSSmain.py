@@ -1,3 +1,5 @@
+from enum import global_str
+
 import flet as ft
 from flet.core.types import TextAlign
 import random
@@ -27,7 +29,13 @@ def main(page: ft.Page):
     statSelection2 = []
     statSelection3 = []
     statSelectionHolder = [statSelection1, statSelection2, statSelection3]  # Theres a better way of doing this, but not in the mood
-
+    statSelectionConfirm = []
+    globalStr = None
+    globalDex = None
+    globalCon = None
+    globalInt = None
+    globalWis = None
+    globalCha = None
 
     def generateStats():
         for x in statSelectionHolder:  # Yeah our runtime is gonna be pretty bad, but i can fix this up later
@@ -57,6 +65,7 @@ def main(page: ft.Page):
                 if isChecked == True:
                     for dd in statDropHolder:
                         dd.options=[
+                            ft.dropdown.Option("None"),
                             ft.dropdown.Option(statSelectionHolder[x][0]),
                             ft.dropdown.Option(statSelectionHolder[x][1]),
                             ft.dropdown.Option(statSelectionHolder[x][2]),
@@ -73,36 +82,103 @@ def main(page: ft.Page):
         statConfirm1.update()
         statConfirm2.update()
         statConfirm3.update()
+    def statConfirm(e):
+        dupeCheck = False
+        dupeCheck2 = False
+
+        if e.data == "None":
+            return
+
+        score = int(e.data)
+        stat = e.control.label
+        if statSelectionConfirm.__contains__(score):
+            print("Dupe Check 1 returned true")
+            dupeCheck = True
+        for x in range(3):
+            if statConfirmHolder[x].value:
+                if statSelectionHolder[x].__contains__(score):
+                    print("Dupe Check 2 returned true")
+                    dupeCheck2 = True
+
+
+        if dupeCheck and not dupeCheck2:
+            return
+        # Could do a for or while loop here, but I dont think its necessary for values which never change. Might change that later though for saving space.
+        if stat == "Strength":
+            strength.value = score
+            strMod.value = score//2 - 5
+        elif stat == "Dexterity":
+            dexterity.value = score
+            dexMod.value = score//2 - 5
+
+        elif stat == "Constitution":
+            constitution.value = score
+            conMod.value = score//2 - 5
+
+        elif stat == "Intelligence":
+            intelligence.value = score
+            intMod.value = score//2 - 5
+
+        elif stat == "Wisdom":
+            wisdom.value = score
+            wisMod.value = score//2 - 5
+
+        elif stat == "Charisma":
+            charisma.value = score
+            chaMod.value = score//2 - 5
+
+        scoreCycle(score)
+
+    def scoreCycle(score):
+        statSelectionConfirm.append(score)
+        for dd in statDropHolder:
+            if str(dd.value) != str(score):
+                for o in dd.options:
+                    if o.key == score:
+                        dd.options.remove(o)
+                        break
+        for x in range(3):
+            if statConfirmHolder[x].value:
+                print(statSelectionHolder[x])
+                print(score)
+                statSelectionHolder[x].remove(score)
+        page.update()
+
 
     strengthDrop = ft.Dropdown(
         label="Strength",
+        on_change=statConfirm,
         width=200,
     )
     dexterityDrop = ft.Dropdown(
         label="Dexterity",
+        on_change=statConfirm,
         width=200,
     )
     constitutionDrop = ft.Dropdown(
         label="Constituion",
+        on_change=statConfirm,
         width=200,
     )
     intelligenceDrop = ft.Dropdown(
         label="Intelligence",
+        on_change=statConfirm,
         width=200,
     )
     wisdomDrop = ft.Dropdown(
         label="Wisdom",
+        on_change=statConfirm,
         width=200,
     )
     charismaDrop = ft.Dropdown(
         label="Charisma",
+        on_change=statConfirm,
         width=200,
     )
     statDropHolder = [strengthDrop, dexterityDrop, constitutionDrop, intelligenceDrop, wisdomDrop,
                       charismaDrop]  # This will be important later
 
-    def statConfirm(e):
-        print("e")
+
 
     statConfirm1 = ft.Checkbox(value=False, on_change=confirmStats)
     statConfirm2 = ft.Checkbox(value=False, on_change=confirmStats)
@@ -114,6 +190,7 @@ def main(page: ft.Page):
 
     def mainView():
         return ft.View(
+
             route="/main",
             scroll=ft.ScrollMode.ADAPTIVE,
             controls=[
@@ -233,7 +310,6 @@ def main(page: ft.Page):
             page.window_close()
 
     sectionOne = ft.Column(
-        expand=True,
         controls=[
             ft.Row(
                 # Trying to have it be that the Base Class is ALWAYS at the far right of the window. I could accomplish
