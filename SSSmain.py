@@ -2,6 +2,7 @@ import flet as ft
 from flet.core.types import TextAlign
 import random
 
+
 def checkInt(e):  # Self explanatory, checks to make sure that the text field IS an int.
     if e.control.value.isdigit():
         e.control.error_text = None
@@ -22,31 +23,92 @@ def main(page: ft.Page):
     # This is probably the worst coding i've done in awhile, but it does what it needs to and looks presentable.
     page.title = "Star's Star's Stars Character Creator"
     page.scroll = "adaptive"
-    statConfirm1 = ft.Checkbox(value=False)
-    statConfirm2 = ft.Checkbox(value=False)
-    statConfirm3 = ft.Checkbox(value=False)
-    statConfirmHolder = [statConfirm1, statConfirm2, statConfirm3]  # Really dumb way of doing this
+
     statSelection1 = []
     statSelection2 = []
     statSelection3 = []
-    statSelectionHolder = [statSelection1, statSelection2,statSelection3] # Theres a better way of doing this, but not in the mood
+    statSelectionHolder = [statSelection1, statSelection2, statSelection3]  # Theres a better way of doing this, but not in the mood
+
 
     def generateStats():
-        for x in statSelectionHolder: # Yeah our runtime is gonna be pretty bad, but i can fix this up later
+        for x in statSelectionHolder:  # Yeah our runtime is gonna be pretty bad, but i can fix this up later
             badNumber = 0
-            for i in range(6):
-                tempStat = [random.randint(1,6),random.randint(1,6),random.randint(1,6),random.randint(1,6)]
+            y = 0
+            while y < 6:
+                y += 1
+                tempStat = [random.randint(1, 6), random.randint(1, 6), random.randint(1, 6), random.randint(1, 6)]
                 tempStat.remove(min(tempStat))
                 x.append(sum(tempStat))
                 if sum(tempStat) <= 10:
                     badNumber += 1
-                tempStat = 0
-                if i == 6:
+                if y == 6:
                     if sum(x) <= 65 or badNumber >= 3:
-                        i = 0
+                        y = 0
+                        badNumber = 0
+                        x.clear()
 
     def confirmStats(e):
-        print(e)
+        isChecked = e.control.value
+        statConfirm1.disabled = isChecked
+        statConfirm2.disabled = isChecked
+        statConfirm3.disabled = isChecked
+        for x in range(3):
+            if statConfirmHolder[x].value == isChecked:
+                statConfirmHolder[x].disabled = False
+                if isChecked == True:
+                    for dd in statDropHolder:
+                        dd.options=[
+                            ft.dropdown.Option(statSelectionHolder[x][0]),
+                            ft.dropdown.Option(statSelectionHolder[x][1]),
+                            ft.dropdown.Option(statSelectionHolder[x][2]),
+                            ft.dropdown.Option(statSelectionHolder[x][3]),
+                            ft.dropdown.Option(statSelectionHolder[x][4]),
+                            ft.dropdown.Option(statSelectionHolder[x][5]),
+                        ]
+                        dd.update()
+                else:
+                    for dd in statDropHolder:
+                        dd.options=[]
+                        dd.update()
+
+        statConfirm1.update()
+        statConfirm2.update()
+        statConfirm3.update()
+
+    strengthDrop = ft.Dropdown(
+        label="Strength",
+        width=200,
+    )
+    dexterityDrop = ft.Dropdown(
+        label="Dexterity",
+        width=200,
+    )
+    constitutionDrop = ft.Dropdown(
+        label="Constituion",
+        width=200,
+    )
+    intelligenceDrop = ft.Dropdown(
+        label="Intelligence",
+        width=200,
+    )
+    wisdomDrop = ft.Dropdown(
+        label="Wisdom",
+        width=200,
+    )
+    charismaDrop = ft.Dropdown(
+        label="Charisma",
+        width=200,
+    )
+    statDropHolder = [strengthDrop, dexterityDrop, constitutionDrop, intelligenceDrop, wisdomDrop,
+                      charismaDrop]  # This will be important later
+
+    def statConfirm(e):
+        print("e")
+
+    statConfirm1 = ft.Checkbox(value=False, on_change=confirmStats)
+    statConfirm2 = ft.Checkbox(value=False, on_change=confirmStats)
+    statConfirm3 = ft.Checkbox(value=False, on_change=confirmStats)
+    statConfirmHolder = [statConfirm1, statConfirm2, statConfirm3]  # Really dumb way of doing this
 
     def navigate_to(route):
         page.go(route)
@@ -151,7 +213,6 @@ def main(page: ft.Page):
         page.update()
 
     def navigation_bar_change(event):
-        print(event)
         selected_index = event.control.selected_index
         if selected_index == 0:
             navigate_to("/actions")
@@ -168,7 +229,6 @@ def main(page: ft.Page):
         page.views.pop()
         if len(page.views) == 0:
             page.window_close()
-
 
     sectionOne = ft.Column(
         controls=[
@@ -389,7 +449,8 @@ def main(page: ft.Page):
                                 ),
                                 ft.Row(
                                     controls=[
-                                        ft.TextField(label="Luck", value=random.randint(1,100), on_change=checkInt, width=130,
+                                        ft.TextField(label="Luck", value=random.randint(1, 100), on_change=checkInt,
+                                                     width=130,
                                                      text_align=TextAlign.CENTER, text_size=24),
                                     ],
                                 ),
@@ -629,15 +690,37 @@ def main(page: ft.Page):
                                     ft.TextField(label="Stat 5", value=statSelection3[4], disabled=True, width=120),
                                     ft.TextField(label="Stat 6", value=statSelection3[5], disabled=True, width=120),
                                     statConfirm3
+                                ],
+                            ),
+                        ],
+                    ),
+                ),
+                ft.Container(
+                    padding=10,
+                    border=ft.border.all(1, "White"),
+                    content=
+                    ft.Column(
+                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                        controls=[
+                            ft.Text("Confirm stat choices", size=18),
+                            ft.Row(
+                                alignment=ft.MainAxisAlignment.CENTER,
+                                controls=[
+                                    strengthDrop,
+                                    dexterityDrop,
+                                    constitutionDrop,
+                                    intelligenceDrop,
+                                    wisdomDrop,
+                                    charismaDrop,
 
                                 ],
                             ),
                         ],
                     ),
                 ),
-
             ],
-        ))
+        )
+    )
 
     navigationBar = ft.NavigationBar(
         selected_index=1,
