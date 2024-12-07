@@ -1,11 +1,11 @@
-from enum import global_str
+import math
 
 import flet as ft
 from flet.core.types import TextAlign
 import random
 
 
-def checkInt(e):  # Self explanatory, checks to make sure that the text field IS an int.
+def checkInt(e):  # Self-explanatory, checks to make sure that the text field IS an int.
     if e.control.value.isdigit():
         e.control.error_text = None
     else:
@@ -25,23 +25,51 @@ globalCon = None
 globalInt = None
 globalWis = None
 globalCha = None
+globalHPOne = None
+globalHPTwo = None
+globalClassOne = None
+globalClassTwo = None
+classHolderOne = ft.Column() # Only need one because features.
+initiative = ft.TextField(width=80, label="Initiative", text_size=20, disabled=True)
+HP = ft.TextField(width=80, label="Max", text_size=20, text_align=TextAlign.CENTER, value = str(4), disabled=True)
+AC = ft.TextField(width=80, label="AC", text_size=20, value = str(10), disabled=True)
+SL = ft.TextField(width=80, label="Max", text_size=20, value = str(0), text_align=TextAlign.CENTER, disabled=True)
+ML = ft.TextField(width=80, label="Max", text_size=20, value = str(0), text_align=TextAlign.CENTER, disabled=True)
+Speed = ft.TextField(width=80, label="Speed", text_size=20, value = str(30), disabled=True)
+armorProf = ft.TextField(width=300)
+damageProt = ft.TextField(width=300)
+damageRes = ft.TextField(width=300)
+weaponProf = ft.TextField(width=300)
 chosenStats = []
 statSelectionConfirm = []
 
 
 def main(page: ft.Page):
     # Anything Major section that needs to start with a ft.Row is its own area. Columns are usually kept together
-    # This is probably the worst coding i've done in awhile, but it does what it needs to and looks presentable.
+    # This is probably the worst coding I've done in a while, but it does what it needs to and looks presentable.
     page.title = "Star's Star's Stars Character Creator"
+    global HP
+    global AC
+    global SL
+    global ML1
+    global Speed
+    global initiative
+    global globalClassOne
+    global globalClassTwo
+    global armorProf
+    global damageProt
+    global damageRes
+    global weaponProf
 
     statSelection1 = []
     statSelection2 = []
     statSelection3 = []
     statSelectionHolder = [statSelection1, statSelection2,
-                           statSelection3]  # Theres a better way of doing this, but not in the mood
-
+                           statSelection3]  # There's a better way of doing this, but not in the mood
+    baseClassOne = ft.TextField(width=200, label="Base Class 1", disabled=True)
+    baseClassTwo = ft.TextField(width=200, label="Base Class 2", disabled=True)
     def generateStats():
-        for x in statSelectionHolder:  # Yeah our runtime is gonna be pretty bad, but i can fix this up later
+        for x in statSelectionHolder:  # The runtime is going to be pretty bad, but I can fix this up later
             badNumber = 0
             y = 0
             while y < 6:
@@ -66,7 +94,7 @@ def main(page: ft.Page):
         for x in range(3):
             if statConfirmHolder[x].value == isChecked:
                 statConfirmHolder[x].disabled = False
-                if isChecked == True:
+                if isChecked:
                     chosenStats = statSelectionHolder[x].copy()
                     for dd in statDropHolder:
                         dd.options = [
@@ -89,8 +117,7 @@ def main(page: ft.Page):
         statConfirm2.update()
         statConfirm3.update()
 
-    def statConfirm(
-            e):  # This is probably one of the worst coding jobs I've ever done in my entire life. I'll need to fix this later.
+    def statConfirm(e):  # This is probably one of the worst coding jobs I've ever done in my entire life. I'll need to fix this later.
         global globalStr
         global globalDex
         global globalCon
@@ -105,47 +132,47 @@ def main(page: ft.Page):
 
         stat = e.control.label
         if e.data == "None":
-            if stat == "Strength" and globalStr != None:
-                if (globalStr != None):
+            if stat == "Strength" and globalStr is not None:
+                if globalStr is not None:
                     for dd in statDropHolder:
                         if dd.label != "Strength":
-                            dd.options.append(ft.dropdown.Option(globalStr))
+                            dd.options.append(ft.dropdown.Option(str(globalStr)))
                     chosenStats.append(globalStr)
                     statSelectionConfirm.remove(globalStr)
                 globalStr = None
-            elif stat == "Dexterity" and globalDex != None:
+            elif stat == "Dexterity" and globalDex is not None:
                 for dd in statDropHolder:
                     if dd.label != "Dexterity":
                         dd.options.append(ft.dropdown.Option(globalDex))
                 chosenStats.append(globalDex)
                 statSelectionConfirm.remove(globalDex)
                 globalDex = None
-            elif stat == "Constitution" and globalCon != None:
+            elif stat == "Constitution" and globalCon is not None:
                 for dd in statDropHolder:
                     if dd.label != "Constitution":
                         dd.options.append(ft.dropdown.Option(globalCon))
                 chosenStats.append(globalCon)
                 statSelectionConfirm.remove(globalCon)
                 globalCon = None
-            elif stat == "Intelligence" and globalInt != None:
+            elif stat == "Intelligence" and globalInt is not None:
                 for dd in statDropHolder:
                     if dd.label != "Intelligence":
                         dd.options.append(ft.dropdown.Option(globalInt))
                 chosenStats.append(globalInt)
                 statSelectionConfirm.remove(globalInt)
                 globalInt = None
-            elif stat == "Wisdom" and globalWis != None:
+            elif stat == "Wisdom" and globalWis is not None:
                 for dd in statDropHolder:
                     if dd.label != "Wisdom":
                         dd.options.append(ft.dropdown.Option(globalWis))
                 chosenStats.append(globalWis)
                 statSelectionConfirm.remove(globalWis)
                 globalWis = None
-            elif stat == "Charisma" and globalCha != None:
-                if (globalCha != None):
+            elif stat == "Charisma" and globalCha is not None:
+                if globalCha is not None:
                     for dd in statDropHolder:
                         if dd.label != "Charisma":
-                            dd.options.append(ft.dropdown.Option(globalCha))
+                            dd.options.append(ft.dropdown.Option(str(globalCha)))
                 chosenStats.append(globalCha)
                 statSelectionConfirm.remove(globalCha)
                 globalCha = None
@@ -159,11 +186,11 @@ def main(page: ft.Page):
 
         if dupeCheck and not dupeCheck2:
             return
-        # Could do a for or while loop here, but I dont think its necessary for values which never change. Might change that later though for saving space.
+        # Could do a for or while loop here, but I don't think it's necessary for values which never change. Might change that later though for saving space.
         if stat == "Strength":
             strength.value = score
             strMod.value = score // 2 - 5
-            if (globalStr != None):
+            if globalStr is not None:
                 for dd in statDropHolder:
                     if dd.label != "Strength":
                         dd.options.append(ft.dropdown.Option(globalStr))
@@ -174,7 +201,9 @@ def main(page: ft.Page):
         elif stat == "Dexterity":
             dexterity.value = score
             dexMod.value = score // 2 - 5
-            if (globalDex != None):
+            AC.value = str(int(AC.value) + int(dexMod.value))
+            if globalDex is not None:
+                AC.value = str(int(AC.value) - (globalDex // 2 - 5))
                 for dd in statDropHolder:
                     if dd.label != "Dexterity":
                         dd.options.append(ft.dropdown.Option(globalDex))
@@ -185,7 +214,13 @@ def main(page: ft.Page):
         elif stat == "Constitution":
             constitution.value = score
             conMod.value = score // 2 - 5
-            if (globalCon != None):
+            HP.value = str(int(HP.value) + int(conMod.value))
+            SL.value = str(int(SL.value) + int(constitution.value) // 3)
+            ML.value = str(int(ML.value) + math.ceil(int(constitution.value) / 2))
+            if globalCon is not None:
+                HP.value = str(int(HP.value) - (globalCon // 2 - 5))
+                SL.value = str(int(SL.value) - (globalCon // 3))
+                ML.value = str(int(ML.value) - math.ceil(globalCon / 2))
                 for dd in statDropHolder:
                     if dd.label != "Constitution":
                         dd.options.append(ft.dropdown.Option(globalCon))
@@ -196,7 +231,9 @@ def main(page: ft.Page):
         elif stat == "Intelligence":
             intelligence.value = score
             intMod.value = score // 2 - 5
-            if (globalInt != None):
+            ML.value = str(int(ML.value) + math.floor(int(intelligence.value) / 4))
+            if globalInt is not None:
+                ML.value = str(int(ML.value) - math.floor(globalInt / 4))
                 for dd in statDropHolder:
                     if dd.label != "Intelligence":
                         dd.options.append(ft.dropdown.Option(globalInt))
@@ -207,7 +244,9 @@ def main(page: ft.Page):
         elif stat == "Wisdom":
             wisdom.value = score
             wisMod.value = score // 2 - 5
-            if (globalWis != None):
+            ML.value = str(int(ML.value) + math.floor(int(wisdom.value) / 4))
+            if globalWis is not None:
+                ML.value = str(int(ML.value) - math.floor(globalWis / 4))
                 for dd in statDropHolder:
                     if dd.label != "Wisdom":
                         dd.options.append(ft.dropdown.Option(globalWis))
@@ -218,9 +257,11 @@ def main(page: ft.Page):
         elif stat == "Charisma":
             charisma.value = score
             chaMod.value = score // 2 - 5
-            if (globalCha != None):
+            ML.value = str(int(ML.value) + math.floor(int(charisma.value) / 4))
+            if globalCha is not None:
+                ML.value = str(int(ML.value) - math.floor(globalCha / 4))
                 for dd in statDropHolder:
-                    if dd.label != "Charmisa":
+                    if dd.label != "Charisma":
                         dd.options.append(ft.dropdown.Option(globalCha))
                 chosenStats.append(globalCha)
                 statSelectionConfirm.remove(globalCha)
@@ -237,10 +278,44 @@ def main(page: ft.Page):
                     if o.key == score:
                         dd.options.remove(o)
                         break
-
         chosenStats.remove(score)
         page.update()
+    def displayClass(e):
+        global globalHPOne
+        global armorProf
+        global damageProt
+        global damageRes
+        global weaponProf
+        global globalCon
+        classChosen = e.control.value
+        print()
+        if classChosen == "Barbarian" and baseClassOne.value != classChosen and baseClassTwo.value != classChosen: # In a full release, EVERY numeral would be its own variable that can be directly referenced. In its current state, it's just to show what it'd look like
+            if baseClassOne is None:
+                baseClassOne.value = "Barbarian"
+            else:
+                baseClassTwo.value = "Barbarian"
+            globalHPOne = 12
+            HP.value = str(int(HP.value)+12)
+            armorProf.value = "Light armor, Medium armor"
+            weaponProf.value = "All simple weapons, one military"
+            if globalCon is not None:
+                tempVal = str((int(globalCon)//2-5)), " Protection vs nonmagical"
+                damageRes.value = ''.join(tempVal)
+            else:
+                damageRes.value = "conMod Protection vs nonmagical"
+        elif classChosen == "None":
+            baseClassOne.value = "None"
+            HP.value = str(int(HP.value) - globalHPOne)
+            globalHPOne = 0
+            armorProf.value = ""
+            weaponProf.value = ""
+            damageRes.value = ""
 
+
+
+
+
+            print()
     strengthDrop = ft.Dropdown(
         label="Strength",
         on_change=statConfirm,
@@ -252,7 +327,7 @@ def main(page: ft.Page):
         width=200,
     )
     constitutionDrop = ft.Dropdown(
-        label="Constituion",
+        label="Constitution",
         on_change=statConfirm,
         width=200,
     )
@@ -271,6 +346,17 @@ def main(page: ft.Page):
         on_change=statConfirm,
         width=200,
     )
+
+    classDrop = ft.Dropdown( # Add classes here later when things are better made
+        label="Class Selection",
+        on_change=displayClass,
+        options=[
+            ft.dropdown.Option("Barbarian"),
+            ft.dropdown.Option("None"),
+        ],
+        width=200,
+    )
+
     statDropHolder = [strengthDrop, dexterityDrop, constitutionDrop, intelligenceDrop, wisdomDrop,
                       charismaDrop]  # This will be important later
 
@@ -398,7 +484,7 @@ def main(page: ft.Page):
         elif selected_index == 4:
             navigate_to("/character-creator")
 
-    def viewPop(view):
+    def viewPop():
         page.views.pop()
         if len(page.views) == 0:
             page.window_close()
@@ -406,16 +492,13 @@ def main(page: ft.Page):
     sectionOne = ft.Column(
         controls=[
             ft.Row(
-                # Trying to have it be that the Base Class is ALWAYS at the far right of the window. I could accomplish
-                # something similiar by having a lot of blank texts with large widths, but I dont want to do that for
-                # clutter. It's already bad enough
                 controls=[
                     ft.TextField(width=200, label="Character Name"),
                     ft.Row(
                         expand=1,
                         alignment=ft.MainAxisAlignment.END,
                         controls=[
-                            ft.TextField(width=200, label="Base Class 1"),
+                            baseClassOne
                         ],
                     ),
                 ],
@@ -427,7 +510,7 @@ def main(page: ft.Page):
                         expand=1,
                         alignment=ft.MainAxisAlignment.END,
                         controls=[
-                            ft.TextField(width=200, label="Base Class 1"),
+                            baseClassTwo
                         ],
                     ),
                     # Replace this later with a thing that fetches the class from another page
@@ -451,8 +534,7 @@ def main(page: ft.Page):
                                         ft.TextField(width=80, label="Current", text_size=20,
                                                      text_align=TextAlign.CENTER),
                                         ft.Text("/", size=24, weight=ft.FontWeight.BOLD),
-                                        ft.TextField(width=80, label="Max", text_size=20,
-                                                     text_align=TextAlign.CENTER),
+                                        HP,
                                     ],
                                 ),
                             ],
@@ -470,8 +552,7 @@ def main(page: ft.Page):
                                         ft.TextField(width=80, label="Current", text_size=20,
                                                      text_align=TextAlign.CENTER),
                                         ft.Text("/", size=24, weight=ft.FontWeight.BOLD),
-                                        ft.TextField(width=80, label="Max", text_size=20,
-                                                     text_align=TextAlign.CENTER),
+                                        ML,
                                     ],
                                 ),
                             ],
@@ -489,8 +570,7 @@ def main(page: ft.Page):
                                         ft.TextField(width=80, label="Current", text_size=20,
                                                      text_align=TextAlign.CENTER),
                                         ft.Text("/", size=24, weight=ft.FontWeight.BOLD),
-                                        ft.TextField(width=80, label="Max", text_size=20,
-                                                     text_align=TextAlign.CENTER),
+                                        SL
                                     ],
                                 ),
                             ],
@@ -499,8 +579,8 @@ def main(page: ft.Page):
                     ft.Column(
                         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                         controls=[
-                            # Stupid solution but it's gonna be what im working with
-                            # until i care to find out how to do a better one
+                            # Stupid solution but it's going be what im working with
+                            # until I care to find out how to do a better one
                             ft.Row(
                                 controls=[
                                     ft.Container(
@@ -510,7 +590,7 @@ def main(page: ft.Page):
                                             horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                                             controls=[
                                                 ft.Text("AC", size=18),
-                                                ft.TextField(width=80, label="AC", text_size=20),
+                                                AC,
                                             ],
                                         ),
                                     ),
@@ -521,7 +601,7 @@ def main(page: ft.Page):
                                             horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                                             controls=[
                                                 ft.Text("Initiative", size=18),
-                                                ft.TextField(width=80, label="Initiative", text_size=20),
+                                                initiative,
                                             ],
                                         ),
                                     ),
@@ -532,7 +612,7 @@ def main(page: ft.Page):
                                             horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                                             controls=[
                                                 ft.Text("Speed", size=18),
-                                                ft.TextField(width=80, label="Speed", text_size=20)
+                                                Speed,
                                             ],
                                         ),
                                     ),
@@ -622,7 +702,8 @@ def main(page: ft.Page):
                                 ),
                                 ft.Row(
                                     controls=[
-                                        ft.TextField(label="Luck", value=random.randint(1, 100), on_change=checkInt,
+                                        ft.TextField(label="Luck", value=str(random.randint(1, 100)),
+                                                     on_change=checkInt,
                                                      width=130,
                                                      text_align=TextAlign.CENTER, text_size=24),
                                     ],
@@ -638,9 +719,9 @@ def main(page: ft.Page):
                             controls=[
                                 ft.Row(
                                     # Probably could store all this data in an array, and have it run through to deploy
-                                    # all of them to save code space, but thats not worth my time right now.
-                                    # I'll change it to an array when my biggest concern isnt "I need to get this done on time."
-                                    # Right now, modifiers dont do anything, but they will in a later version.
+                                    # all of them to save code space, but that's not worth my time right now.
+                                    # I'll change it to an array when my biggest concern isn't "I need to get this done on time."
+                                    # Right now, modifiers don't do anything, but they will in a later version.
                                     controls=[
                                         ft.Checkbox(label="Acrobatics (Dex)", height=20),
                                         ft.TextField(label="Mod", disabled=True, width=40, height=20)
@@ -757,25 +838,24 @@ def main(page: ft.Page):
                             ],
                         ),
                     ),
-                    # Note to self: Add to pdf to have it be denoted that anything in bold is expertise, or smtn similiar
+                    # Note to self: Add to pdf to have it be denoted that anything in bold is expertise, or something similar
                     ft.Container(
                         padding=10,
                         border=ft.border.all(1, "White"),
-                        content=ft.Column(  # The goal here is have the entire right column be self automating.
+                        content=ft.Column(  # The goal here is to have the entire right column be self automating.
                             controls=[
                                 ft.Column(
                                     controls=[
                                         # Formatting is a bit weird, but works.
-                                        ft.Text("Psychoses", weight=ft.FontWeight.BOLD, size=16),
-                                        ft.TextField(width=300),
+
                                         ft.Text("Damage Resistances", weight=ft.FontWeight.BOLD, size=16),
-                                        ft.TextField(width=300),
+                                        damageRes,
                                         ft.Text("Damage Protections", weight=ft.FontWeight.BOLD, size=16),
-                                        ft.TextField(width=300),
-                                        # Damage Immunity isnt really a thing for players, so not on the sheet.
-                                        # to make it more stylized. "Later" being after everything important is done.
+                                        damageProt,
+                                        ft.Text("Weapon Proficiencies", weight=ft.FontWeight.BOLD, size=16),
+                                        weaponProf,
                                         ft.Text("Armor Proficiencies", weight=ft.FontWeight.BOLD, size=16),
-                                        ft.TextField(width=300),
+                                        armorProf,
                                         ft.Text("Tool Proficiencies", weight=ft.FontWeight.BOLD, size=16),
                                         ft.TextField(width=300),
                                         # Ideally, by the end of this project, the entire right
@@ -885,6 +965,24 @@ def main(page: ft.Page):
                                     intelligenceDrop,
                                     wisdomDrop,
                                     charismaDrop,
+
+                                ],
+                            ),
+                        ],
+                    ),
+                ),
+                ft.Container( # Entire Segment is going to need rework post-showcase. Revamp the entire thing to be class based, and calls from them.
+                    padding=10,
+                    border=ft.border.all(1, "White"),
+                    content=
+                    ft.Column(
+                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                        controls=[
+                            ft.Text("Class Selection", size=18),
+                            ft.Row(
+                                alignment=ft.MainAxisAlignment.CENTER,
+                                controls=[
+                                    classDrop
 
                                 ],
                             ),
