@@ -22,7 +22,6 @@ def main(page: ft.Page):
     # Anything Major section that needs to start with a ft.Row is its own area. Columns are usually kept together
     # This is probably the worst coding i've done in awhile, but it does what it needs to and looks presentable.
     page.title = "Star's Star's Stars Character Creator"
-    page.scroll = "adaptive"
 
     statSelection1 = []
     statSelection2 = []
@@ -116,6 +115,7 @@ def main(page: ft.Page):
     def mainView():
         return ft.View(
             route="/main",
+            scroll=ft.ScrollMode.ADAPTIVE,
             controls=[
                 ft.Column(
                     controls=[
@@ -182,8 +182,10 @@ def main(page: ft.Page):
     def characterCreatorView():
         return ft.View(
             route="/character-creator",
+            scroll=ft.ScrollMode.ADAPTIVE,
             controls=[
                 ft.Column(
+                    expand=True,
                     controls=[
                         sectionOne,
                         ft.Divider(),
@@ -231,6 +233,7 @@ def main(page: ft.Page):
             page.window_close()
 
     sectionOne = ft.Column(
+        expand=True,
         controls=[
             ft.Row(
                 # Trying to have it be that the Base Class is ALWAYS at the far right of the window. I could accomplish
