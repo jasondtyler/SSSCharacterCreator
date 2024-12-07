@@ -26,6 +26,9 @@ globalInt = None
 globalWis = None
 globalCha = None
 chosenStats = []
+statSelectionConfirm = []
+
+
 def main(page: ft.Page):
     # Anything Major section that needs to start with a ft.Row is its own area. Columns are usually kept together
     # This is probably the worst coding i've done in awhile, but it does what it needs to and looks presentable.
@@ -34,9 +37,8 @@ def main(page: ft.Page):
     statSelection1 = []
     statSelection2 = []
     statSelection3 = []
-    statSelectionHolder = [statSelection1, statSelection2, statSelection3]  # Theres a better way of doing this, but not in the mood
-    statSelectionConfirm = []
-
+    statSelectionHolder = [statSelection1, statSelection2,
+                           statSelection3]  # Theres a better way of doing this, but not in the mood
 
     def generateStats():
         for x in statSelectionHolder:  # Yeah our runtime is gonna be pretty bad, but i can fix this up later
@@ -57,7 +59,6 @@ def main(page: ft.Page):
 
     def confirmStats(e):
         global chosenStats
-        print(chosenStats)
         isChecked = e.control.value
         statConfirm1.disabled = isChecked
         statConfirm2.disabled = isChecked
@@ -68,7 +69,7 @@ def main(page: ft.Page):
                 if isChecked == True:
                     chosenStats = statSelectionHolder[x].copy()
                     for dd in statDropHolder:
-                        dd.options=[
+                        dd.options = [
                             ft.dropdown.Option("None"),
                             ft.dropdown.Option(chosenStats[0]),
                             ft.dropdown.Option(chosenStats[1]),
@@ -80,58 +81,155 @@ def main(page: ft.Page):
                         dd.update()
                 else:
                     for dd in statDropHolder:
-                        dd.options=[]
+                        dd.options = []
                         dd.value = None
                         dd.update()
 
         statConfirm1.update()
         statConfirm2.update()
         statConfirm3.update()
-    def statConfirm(e):
+
+    def statConfirm(
+            e):  # This is probably one of the worst coding jobs I've ever done in my entire life. I'll need to fix this later.
+        global globalStr
+        global globalDex
+        global globalCon
+        global globalInt
+        global globalWis
+        global globalCha
+        global statSelectionConfirm
+        global chosenStats
+
         dupeCheck = False
         dupeCheck2 = False
 
+        stat = e.control.label
         if e.data == "None":
+            if stat == "Strength" and globalStr != None:
+                if (globalStr != None):
+                    for dd in statDropHolder:
+                        if dd.label != "Strength":
+                            dd.options.append(ft.dropdown.Option(globalStr))
+                    chosenStats.append(globalStr)
+                    statSelectionConfirm.remove(globalStr)
+                globalStr = None
+            elif stat == "Dexterity" and globalDex != None:
+                for dd in statDropHolder:
+                    if dd.label != "Dexterity":
+                        dd.options.append(ft.dropdown.Option(globalDex))
+                chosenStats.append(globalDex)
+                statSelectionConfirm.remove(globalDex)
+                globalDex = None
+            elif stat == "Constitution" and globalCon != None:
+                for dd in statDropHolder:
+                    if dd.label != "Constitution":
+                        dd.options.append(ft.dropdown.Option(globalCon))
+                chosenStats.append(globalCon)
+                statSelectionConfirm.remove(globalCon)
+                globalCon = None
+            elif stat == "Intelligence" and globalInt != None:
+                for dd in statDropHolder:
+                    if dd.label != "Intelligence":
+                        dd.options.append(ft.dropdown.Option(globalInt))
+                chosenStats.append(globalInt)
+                statSelectionConfirm.remove(globalInt)
+                globalInt = None
+            elif stat == "Wisdom" and globalWis != None:
+                for dd in statDropHolder:
+                    if dd.label != "Wisdom":
+                        dd.options.append(ft.dropdown.Option(globalWis))
+                chosenStats.append(globalWis)
+                statSelectionConfirm.remove(globalWis)
+                globalWis = None
+            elif stat == "Charisma" and globalCha != None:
+                if (globalCha != None):
+                    for dd in statDropHolder:
+                        if dd.label != "Charisma":
+                            dd.options.append(ft.dropdown.Option(globalCha))
+                chosenStats.append(globalCha)
+                statSelectionConfirm.remove(globalCha)
+                globalCha = None
+            page.update()
             return
         score = int(e.data)
-        stat = e.control.label
-
         if statSelectionConfirm.__contains__(score):
             dupeCheck = True
-
         if chosenStats.__contains__(score):
             dupeCheck2 = True
-
 
         if dupeCheck and not dupeCheck2:
             return
         # Could do a for or while loop here, but I dont think its necessary for values which never change. Might change that later though for saving space.
         if stat == "Strength":
             strength.value = score
-            strMod.value = score//2 - 5
+            strMod.value = score // 2 - 5
+            if (globalStr != None):
+                for dd in statDropHolder:
+                    if dd.label != "Strength":
+                        dd.options.append(ft.dropdown.Option(globalStr))
+                chosenStats.append(globalStr)
+                statSelectionConfirm.remove(globalStr)
+            globalStr = score
+
         elif stat == "Dexterity":
             dexterity.value = score
-            dexMod.value = score//2 - 5
+            dexMod.value = score // 2 - 5
+            if (globalDex != None):
+                for dd in statDropHolder:
+                    if dd.label != "Dexterity":
+                        dd.options.append(ft.dropdown.Option(globalDex))
+                chosenStats.append(globalDex)
+                statSelectionConfirm.remove(globalDex)
+            globalDex = score
 
         elif stat == "Constitution":
             constitution.value = score
-            conMod.value = score//2 - 5
+            conMod.value = score // 2 - 5
+            if (globalCon != None):
+                for dd in statDropHolder:
+                    if dd.label != "Constitution":
+                        dd.options.append(ft.dropdown.Option(globalCon))
+                chosenStats.append(globalCon)
+                statSelectionConfirm.remove(globalCon)
+            globalCon = score
 
         elif stat == "Intelligence":
             intelligence.value = score
-            intMod.value = score//2 - 5
+            intMod.value = score // 2 - 5
+            if (globalInt != None):
+                for dd in statDropHolder:
+                    if dd.label != "Intelligence":
+                        dd.options.append(ft.dropdown.Option(globalInt))
+                chosenStats.append(globalInt)
+                statSelectionConfirm.remove(globalInt)
+            globalInt = score
 
         elif stat == "Wisdom":
             wisdom.value = score
-            wisMod.value = score//2 - 5
+            wisMod.value = score // 2 - 5
+            if (globalWis != None):
+                for dd in statDropHolder:
+                    if dd.label != "Wisdom":
+                        dd.options.append(ft.dropdown.Option(globalWis))
+                chosenStats.append(globalWis)
+                statSelectionConfirm.remove(globalWis)
+            globalWis = score
 
         elif stat == "Charisma":
             charisma.value = score
-            chaMod.value = score//2 - 5
+            chaMod.value = score // 2 - 5
+            if (globalCha != None):
+                for dd in statDropHolder:
+                    if dd.label != "Charmisa":
+                        dd.options.append(ft.dropdown.Option(globalCha))
+                chosenStats.append(globalCha)
+                statSelectionConfirm.remove(globalCha)
+            globalCha = score
 
         scoreCycle(score)
 
     def scoreCycle(score):
+        global statSelectionConfirm
         statSelectionConfirm.append(score)
         for dd in statDropHolder:
             if str(dd.value) != str(score):
@@ -139,10 +237,9 @@ def main(page: ft.Page):
                     if o.key == score:
                         dd.options.remove(o)
                         break
-        print(chosenStats)
+
         chosenStats.remove(score)
         page.update()
-
 
     strengthDrop = ft.Dropdown(
         label="Strength",
@@ -176,8 +273,6 @@ def main(page: ft.Page):
     )
     statDropHolder = [strengthDrop, dexterityDrop, constitutionDrop, intelligenceDrop, wisdomDrop,
                       charismaDrop]  # This will be important later
-
-
 
     statConfirm1 = ft.Checkbox(value=False, on_change=confirmStats)
     statConfirm2 = ft.Checkbox(value=False, on_change=confirmStats)
