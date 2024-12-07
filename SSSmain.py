@@ -1,23 +1,56 @@
 import flet as ft
 from flet.core.types import TextAlign
+import random
+
 def checkInt(e):  # Self explanatory, checks to make sure that the text field IS an int.
     if e.control.value.isdigit():
         e.control.error_text = None
     else:
         e.control.value = 10
     e.control.update()
+
+
 vertical_border = ft.Container(
     width=1,  # Border width
     height=50,  # Adjust height to fit content
     bgcolor="white",  # Border color
 )
+
+
 def main(page: ft.Page):
     # Anything Major section that needs to start with a ft.Row is its own area. Columns are usually kept together
     # This is probably the worst coding i've done in awhile, but it does what it needs to and looks presentable.
     page.title = "Star's Star's Stars Character Creator"
     page.scroll = "adaptive"
+    statConfirm1 = ft.Checkbox(value=False)
+    statConfirm2 = ft.Checkbox(value=False)
+    statConfirm3 = ft.Checkbox(value=False)
+    statConfirmHolder = [statConfirm1, statConfirm2, statConfirm3]  # Really dumb way of doing this
+    statSelection1 = []
+    statSelection2 = []
+    statSelection3 = []
+    statSelectionHolder = [statSelection1, statSelection2,statSelection3] # Theres a better way of doing this, but not in the mood
+
+    def generateStats():
+        for x in statSelectionHolder: # Yeah our runtime is gonna be pretty bad, but i can fix this up later
+            badNumber = 0
+            for i in range(6):
+                tempStat = [random.randint(1,6),random.randint(1,6),random.randint(1,6),random.randint(1,6)]
+                tempStat.remove(min(tempStat))
+                x.append(sum(tempStat))
+                if sum(tempStat) <= 10:
+                    badNumber += 1
+                tempStat = 0
+                if i == 6:
+                    if sum(x) <= 65 or badNumber >= 3:
+                        i = 0
+
+    def confirmStats(e):
+        print(e)
+
     def navigate_to(route):
         page.go(route)
+
     def mainView():
         return ft.View(
             route="/main",
@@ -51,6 +84,7 @@ def main(page: ft.Page):
                 ),
             ],
         )
+
     def classSelectionView():
         return ft.View(
             route="/class-selection",
@@ -66,6 +100,7 @@ def main(page: ft.Page):
                 ),
             ],
         )
+
     def featuresTalentsView():
         return ft.View(
             route="/features-talents",
@@ -81,6 +116,7 @@ def main(page: ft.Page):
                 ),
             ],
         )
+
     def characterCreatorView():
         return ft.View(
             route="/character-creator",
@@ -91,12 +127,13 @@ def main(page: ft.Page):
                         ft.Divider(),
                         navigationBar,
                         ft.Divider(),
-                        ft.Text("CHARACTER CREATOR PAGE: TO BE COMPLETED", weight=ft.FontWeight.BOLD, size=30)
+                        characterCreator,
                     ],
                 ),
             ],
         )
-    def route_change(route):
+
+    def routeChange(route):
         route = route.data.strip()
         page.views.clear()
         if route == "/main":
@@ -112,7 +149,9 @@ def main(page: ft.Page):
         else:
             page.views.append(mainView())
         page.update()
+
     def navigation_bar_change(event):
+        print(event)
         selected_index = event.control.selected_index
         if selected_index == 0:
             navigate_to("/actions")
@@ -124,10 +163,13 @@ def main(page: ft.Page):
             navigate_to("/features-talents")
         elif selected_index == 4:
             navigate_to("/character-creator")
-    def view_pop(view):
+
+    def viewPop(view):
         page.views.pop()
         if len(page.views) == 0:
             page.window_close()
+
+
     sectionOne = ft.Column(
         controls=[
             ft.Row(
@@ -287,6 +329,18 @@ def main(page: ft.Page):
             ),
         ],
     )
+    strength = ft.TextField(label="Str", on_change=checkInt, width=60)
+    strMod = ft.TextField(label="Mod", disabled=True, width=60)
+    dexterity = ft.TextField(label="Dex", on_change=checkInt, width=60)
+    dexMod = ft.TextField(label="Mod", disabled=True, width=60)
+    constitution = ft.TextField(label="Con", on_change=checkInt, width=60)
+    conMod = ft.TextField(label="Mod", disabled=True, width=60)
+    intelligence = ft.TextField(label="Int", on_change=checkInt, width=60)
+    intMod = ft.TextField(label="Mod", disabled=True, width=60)
+    wisdom = ft.TextField(label="Wis", on_change=checkInt, width=60)
+    wisMod = ft.TextField(label="Mod", disabled=True, width=60)
+    charisma = ft.TextField(label="Cha", on_change=checkInt, width=60)
+    chaMod = ft.TextField(label="Mod", disabled=True, width=60)
     sectionThree = ft.Column(
         controls=[
             ft.Row(
@@ -299,43 +353,43 @@ def main(page: ft.Page):
                                 ft.Text("Ability Scores", size=16),
                                 ft.Row(
                                     controls=[
-                                        ft.TextField(label="Str", on_change=checkInt, width=60),
-                                        ft.TextField(label="Mod", disabled=True, width=60),
+                                        strength,
+                                        strMod,
                                     ],
                                 ),
                                 ft.Row(
                                     controls=[
-                                        ft.TextField(label="Dex", on_change=checkInt, width=60),
-                                        ft.TextField(label="Mod", disabled=True, width=60),
+                                        dexterity,
+                                        dexMod,
                                     ],
                                 ),
                                 ft.Row(
                                     controls=[
-                                        ft.TextField(label="Con", on_change=checkInt, width=60),
-                                        ft.TextField(label="Mod", disabled=True, width=60),
+                                        constitution,
+                                        conMod,
                                     ],
                                 ),
                                 ft.Row(
                                     controls=[
-                                        ft.TextField(label="Int", on_change=checkInt, width=60),
-                                        ft.TextField(label="Mod", disabled=True, width=60),
+                                        intelligence,
+                                        intMod,
                                     ],
                                 ),
                                 ft.Row(
                                     controls=[
-                                        ft.TextField(label="Wis", on_change=checkInt, width=60),
-                                        ft.TextField(label="Mod", disabled=True, width=60),
+                                        wisdom,
+                                        wisMod,
                                     ],
                                 ),
                                 ft.Row(
                                     controls=[
-                                        ft.TextField(label="Cha", on_change=checkInt, width=60),
-                                        ft.TextField(label="Mod", disabled=True, width=60),
+                                        charisma,
+                                        chaMod,
                                     ],
                                 ),
                                 ft.Row(
                                     controls=[
-                                        ft.TextField(label="Luck", on_change=checkInt, width=130,
+                                        ft.TextField(label="Luck", value=random.randint(1,100), on_change=checkInt, width=130,
                                                      text_align=TextAlign.CENTER, text_size=24),
                                     ],
                                 ),
@@ -502,6 +556,89 @@ def main(page: ft.Page):
             ),
         ],
     )
+
+    generateStats()
+    characterCreator = (
+        ft.Column(
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+            controls=[
+                ft.Text("Choose a stat selection. Your luck has already been automatically generated.", size=18),
+                ft.Container(
+                    padding=10,
+                    border=ft.border.all(1, "White"),
+                    content=
+                    ft.Column(
+                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                        controls=[
+                            ft.Text("Stat Choice 1", size=18),
+                            ft.Row(
+                                alignment=ft.MainAxisAlignment.CENTER,
+                                controls=[
+                                    ft.TextField(label="Stat 1", value=statSelection1[0], disabled=True, width=120),
+                                    ft.TextField(label="Stat 2", value=statSelection1[1], disabled=True, width=120),
+                                    ft.TextField(label="Stat 3", value=statSelection1[2], disabled=True, width=120),
+                                    ft.TextField(label="Stat 4", value=statSelection1[3], disabled=True, width=120),
+                                    ft.TextField(label="Stat 5", value=statSelection1[4], disabled=True, width=120),
+                                    ft.TextField(label="Stat 6", value=statSelection1[5], disabled=True, width=120),
+                                    statConfirm1
+
+                                ],
+                            ),
+                        ],
+                    ),
+                ),
+                ft.Container(
+                    padding=10,
+                    border=ft.border.all(1, "White"),
+                    content=
+                    ft.Column(
+                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                        controls=[
+                            ft.Text("Stat Choice 2", size=18),
+                            ft.Row(
+                                alignment=ft.MainAxisAlignment.CENTER,
+                                controls=[
+                                    ft.TextField(label="Stat 1", value=statSelection2[0], disabled=True, width=120),
+                                    ft.TextField(label="Stat 2", value=statSelection2[1], disabled=True, width=120),
+                                    ft.TextField(label="Stat 3", value=statSelection2[2], disabled=True, width=120),
+                                    ft.TextField(label="Stat 4", value=statSelection2[3], disabled=True, width=120),
+                                    ft.TextField(label="Stat 5", value=statSelection2[4], disabled=True, width=120),
+                                    ft.TextField(label="Stat 6", value=statSelection2[5], disabled=True, width=120),
+                                    statConfirm2
+
+                                ],
+                            ),
+                        ],
+                    ),
+                ),
+                ft.Container(
+                    padding=10,
+                    border=ft.border.all(1, "White"),
+                    content=
+                    ft.Column(
+                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                        controls=[
+                            ft.Text("Stat Choice 3", size=18),
+                            ft.Row(
+                                alignment=ft.MainAxisAlignment.CENTER,
+                                controls=[
+                                    ft.TextField(label="Stat 1", value=statSelection3[0], disabled=True, width=120),
+                                    ft.TextField(label="Stat 2", value=statSelection3[1], disabled=True, width=120),
+                                    ft.TextField(label="Stat 3", value=statSelection3[2], disabled=True, width=120),
+                                    ft.TextField(label="Stat 4", value=statSelection3[3], disabled=True, width=120),
+                                    ft.TextField(label="Stat 5", value=statSelection3[4], disabled=True, width=120),
+                                    ft.TextField(label="Stat 6", value=statSelection3[5], disabled=True, width=120),
+                                    statConfirm3
+
+                                ],
+                            ),
+                        ],
+                    ),
+                ),
+
+            ],
+        ))
+
     navigationBar = ft.NavigationBar(
         selected_index=1,
         on_change=navigation_bar_change,
@@ -510,10 +647,14 @@ def main(page: ft.Page):
             ft.NavigationBarDestination(label="Main"),
             ft.NavigationBarDestination(label="Class Selection"),
             ft.NavigationBarDestination(label="Features and Talents"),
+            # Despite what you may assume, this place only keeps track of what Features and Talents you HAVE
             ft.NavigationBarDestination(label="Character Creator"),
         ]
+
     )
-    page.on_route_change = route_change
-    page.on_view_pop = view_pop
-    page.go("/main") # THIS IS NECESSARY! DONT TOUCH
+    page.on_route_change = routeChange
+    page.on_view_pop = viewPop
+    page.go("/main")  # THIS IS NECESSARY! DONT TOUCH
+
+
 ft.app(main)
