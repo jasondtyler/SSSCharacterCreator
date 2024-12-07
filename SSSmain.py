@@ -19,7 +19,13 @@ vertical_border = ft.Container(
     bgcolor="white",  # Border color
 )
 
-
+globalStr = None
+globalDex = None
+globalCon = None
+globalInt = None
+globalWis = None
+globalCha = None
+chosenStats = []
 def main(page: ft.Page):
     # Anything Major section that needs to start with a ft.Row is its own area. Columns are usually kept together
     # This is probably the worst coding i've done in awhile, but it does what it needs to and looks presentable.
@@ -30,12 +36,7 @@ def main(page: ft.Page):
     statSelection3 = []
     statSelectionHolder = [statSelection1, statSelection2, statSelection3]  # Theres a better way of doing this, but not in the mood
     statSelectionConfirm = []
-    globalStr = None
-    globalDex = None
-    globalCon = None
-    globalInt = None
-    globalWis = None
-    globalCha = None
+
 
     def generateStats():
         for x in statSelectionHolder:  # Yeah our runtime is gonna be pretty bad, but i can fix this up later
@@ -55,6 +56,8 @@ def main(page: ft.Page):
                         x.clear()
 
     def confirmStats(e):
+        global chosenStats
+        print(chosenStats)
         isChecked = e.control.value
         statConfirm1.disabled = isChecked
         statConfirm2.disabled = isChecked
@@ -63,20 +66,22 @@ def main(page: ft.Page):
             if statConfirmHolder[x].value == isChecked:
                 statConfirmHolder[x].disabled = False
                 if isChecked == True:
+                    chosenStats = statSelectionHolder[x].copy()
                     for dd in statDropHolder:
                         dd.options=[
                             ft.dropdown.Option("None"),
-                            ft.dropdown.Option(statSelectionHolder[x][0]),
-                            ft.dropdown.Option(statSelectionHolder[x][1]),
-                            ft.dropdown.Option(statSelectionHolder[x][2]),
-                            ft.dropdown.Option(statSelectionHolder[x][3]),
-                            ft.dropdown.Option(statSelectionHolder[x][4]),
-                            ft.dropdown.Option(statSelectionHolder[x][5]),
+                            ft.dropdown.Option(chosenStats[0]),
+                            ft.dropdown.Option(chosenStats[1]),
+                            ft.dropdown.Option(chosenStats[2]),
+                            ft.dropdown.Option(chosenStats[3]),
+                            ft.dropdown.Option(chosenStats[4]),
+                            ft.dropdown.Option(chosenStats[5]),
                         ]
                         dd.update()
                 else:
                     for dd in statDropHolder:
                         dd.options=[]
+                        dd.value = None
                         dd.update()
 
         statConfirm1.update()
@@ -88,17 +93,14 @@ def main(page: ft.Page):
 
         if e.data == "None":
             return
-
         score = int(e.data)
         stat = e.control.label
+
         if statSelectionConfirm.__contains__(score):
-            print("Dupe Check 1 returned true")
             dupeCheck = True
-        for x in range(3):
-            if statConfirmHolder[x].value:
-                if statSelectionHolder[x].__contains__(score):
-                    print("Dupe Check 2 returned true")
-                    dupeCheck2 = True
+
+        if chosenStats.__contains__(score):
+            dupeCheck2 = True
 
 
         if dupeCheck and not dupeCheck2:
@@ -137,11 +139,8 @@ def main(page: ft.Page):
                     if o.key == score:
                         dd.options.remove(o)
                         break
-        for x in range(3):
-            if statConfirmHolder[x].value:
-                print(statSelectionHolder[x])
-                print(score)
-                statSelectionHolder[x].remove(score)
+        print(chosenStats)
+        chosenStats.remove(score)
         page.update()
 
 
