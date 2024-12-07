@@ -1,7 +1,7 @@
 # Star's Star's Stars Character Generator
 
 ## Foreword
-This program is a program made exclusively for a homemade TTRPG system known as "Star's Star's Stars, and was made with the intent to streamline character creation. To access the documentation for Star's Star's Stars, go here: https://drive.google.com/drive/folders/1nXMcLUblA_DLEPYyDq-Dp2c6bZ3fSXQm?usp=drive_link
+This program is a program made exclusively for a homemade TTRPG system known as "Star's Star's Stars", and was made with the intent to streamline character creation. To access the documentation for "Star's Star's Stars", go here: https://drive.google.com/drive/folders/1nXMcLUblA_DLEPYyDq-Dp2c6bZ3fSXQm?usp=drive_link
 
 ## Instructions
 
