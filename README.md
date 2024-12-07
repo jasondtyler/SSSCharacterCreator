@@ -10,4 +10,4 @@ To begin character creation, click on the "Character Creator Tab" and follow the
 
 
 ## Limitations
-Due the sheer scale that the project takes up (Over 20 classes that at minimum possess 4 subclasses each), Things have been toned down to just one class, since adding more than one class to the code as it is now will require a long term effort (massive UI restructuring)
+Due the sheer scale that the project takes up (Over 20 classes that at minimum possess 4 subclasses each), Things have been toned down to just one class, since adding more than one class to the code as it is now will require a long term effort (massive UI restructuring).  The backend (code) will not represent how it will actually be as a final product. The appearance of whats going on in the back gives a rough idea of whats going on.
