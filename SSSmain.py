@@ -51,7 +51,7 @@ def main(page: ft.Page):
     global HP
     global AC
     global SL
-    global ML1
+    global ML
     global Speed
     global initiative
     global globalClassOne
